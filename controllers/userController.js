@@ -66,6 +66,7 @@ export const register = catchAsyncError(async(req,res,next)=>{
 })
 
 async function sendVerificationCode(verificationMethod,verificationCode,email,phone){
+     try{
         if(verificationMethod === 'email'){
             const message = generateEmailTemplate(verificationCode);
             sendEmail({email,subject:"Your Verification Code",message})
@@ -76,7 +77,12 @@ async function sendVerificationCode(verificationMethod,verificationCode,email,ph
             from: process.env.TWILIO_PHONE_NUMBER,
             to: phone
         });
+        }else{
+            throw new ErrorHandler('Invalid verification method',500);
         }
+    }catch(error){
+        throw new ErrorHandler('Failed to send verification code.',500);
+    }
 }
 
 function generateEmailTemplate(verificationCode){
