@@ -1,7 +1,7 @@
 import ErrorHandler from '../middleware/error.js'
 import { catchAsyncError } from '../middleware/catchAsyncError.js'
 import {User} from '../models/userModel.js'
-import { sendVerificationCode } from '../utils/sendVerificationCode.js';
+import { sendEmail } from '../utilis/sendEmail.js';
 import twilio from 'twilio';
 
 const client = twilio(process.env.TWILIO_SID,process.env.TWILIO_AUTH_TOKEN);
@@ -69,7 +69,7 @@ async function sendVerificationCode(verificationMethod,verificationCode,email,ph
      try{
         if(verificationMethod === 'email'){
             const message = generateEmailTemplate(verificationCode);
-            sendEmail({email,subject:"Your Verification Code",message})
+            await sendEmail({email,subject:"Your Verification Code",message})
         }else if(verificationMethod === 'phone'){
             const verificationWithSpace = verificationCode.toString().split('').join(' ');
             await client.calls.create({
@@ -86,8 +86,8 @@ async function sendVerificationCode(verificationMethod,verificationCode,email,ph
 }
 
 function generateEmailTemplate(verificationCode){
-    return(
-        <div style='font-family: Arial,sans-serif; max-width:600px;margin:0 auto; padding:20px; border:1px solid #ddd;border:radius:8px ;background-color:#f9f9f9'>
+    return`
+        <div style='font-family: Arial,sans-serif; max-width:600px;margin:0 auto; padding:20px; border:1px solid #ddd;border-radius:8px ;background-color:#f9f9f9'>
             <h2 style='color :#4CAF50; text-align:center;'>Verification Code</h2>
             <p style='font-size:16px;color:#333'>Dear User,</p>
             <p style='font-size:16px;color:#333'>Your Verification code is</p>
@@ -101,5 +101,5 @@ function generateEmailTemplate(verificationCode){
                 <p style='font-size:12px;color:#aaa'>This is an automated message. Please do no reply to this email.</p>
             </footer>
         </div>
-    )
+    `
 }
