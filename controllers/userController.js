@@ -56,20 +56,22 @@ export const register = catchAsyncError(async(req,res,next)=>{
         // Generate verification code and send it to the userr
         const verificationCode = await user.generateVerificationCode();
         await user.save();
-        sendVerificationCode(verificationMethod,verificationCode,email,phone);
-        res.status(200).json({
-            success:true,
-        })
+        sendVerificationCode(verificationMethod,verificationCode,name,email,phone,res);
+        
     }catch(error){
          next(error);
     }
 })
 
-async function sendVerificationCode(verificationMethod,verificationCode,email,phone){
+async function sendVerificationCode(verificationMethod,verificationCode,name,email,phone,res){
      try{
         if(verificationMethod === 'email'){
             const message = generateEmailTemplate(verificationCode);
             await sendEmail({email,subject:"Your Verification Code",message})
+            res.status(200).json({
+            success:true,
+            message: `Verification email successfully sent to ${name}`
+        })
         }else if(verificationMethod === 'phone'){
             const verificationWithSpace = verificationCode.toString().split('').join(' ');
             await client.calls.create({
@@ -77,11 +79,21 @@ async function sendVerificationCode(verificationMethod,verificationCode,email,ph
             from: process.env.TWILIO_PHONE_NUMBER,
             to: phone
         });
+          res.status(200).json({
+            success:true,
+            message: `OTP sent`
+        })
         }else{
-            throw new ErrorHandler('Invalid verification method',500);
+             return res.status(500).json({
+            success:false,
+            message: 'Invalid verification method'
+        })
         }
     }catch(error){
-        throw new ErrorHandler('Failed to send verification code.',500);
+        return res.status(500).json({
+            success:false,
+            message: 'Verification code is failed to send.'
+        })
     }
 }
 
