@@ -86,7 +86,7 @@ async function sendVerificationCode(verificationMethod,verificationCode,name,ema
         }else{
              return res.status(500).json({
             success:false,
-            message: 'Invalid verification method'
+            message: 'Invalid verification method used '
         })
         }
     }catch(error){
