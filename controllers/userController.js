@@ -5,7 +5,7 @@ import { sendEmail } from '../utilis/sendEmail.js';
 import twilio from 'twilio';
 
 
-const client = twilio(process.env.TWILIO_ACCOUNT_SID,process.env.TWILIO_AUTH_TOKEN);
+
 
 export const register = catchAsyncError(async(req,res,next)=>{
     try{
@@ -65,7 +65,11 @@ export const register = catchAsyncError(async(req,res,next)=>{
 })
 
 async function sendVerificationCode(verificationMethod,verificationCode,name,email,phone,res){
-     try{
+    try {
+        const client = twilio(
+            process.env.TWILIO_ACCOUNT_SID,
+            process.env.TWILIO_AUTH_TOKEN
+        );
         if(verificationMethod === 'email'){
             const message = generateEmailTemplate(verificationCode);
             await sendEmail({email,subject:"Your Verification Code",message})
