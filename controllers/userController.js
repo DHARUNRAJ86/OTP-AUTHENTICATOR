@@ -4,7 +4,8 @@ import {User} from '../models/userModel.js'
 import { sendEmail } from '../utilis/sendEmail.js';
 import twilio from 'twilio';
 
-const client = twilio(process.env.TWILIO_SID,process.env.TWILIO_AUTH_TOKEN);
+
+const client = twilio(process.env.TWILIO_ACCOUNT_SID,process.env.TWILIO_AUTH_TOKEN);
 
 export const register = catchAsyncError(async(req,res,next)=>{
     try{
@@ -56,7 +57,7 @@ export const register = catchAsyncError(async(req,res,next)=>{
         // Generate verification code and send it to the userr
         const verificationCode = await user.generateVerificationCode();
         await user.save();
-        sendVerificationCode(verificationMethod,verificationCode,name,email,phone,res);
+        await sendVerificationCode(verificationMethod,verificationCode,name,email,phone,res);
         
     }catch(error){
          next(error);
@@ -75,7 +76,7 @@ async function sendVerificationCode(verificationMethod,verificationCode,name,ema
         }else if(verificationMethod === 'phone'){
             const verificationWithSpace = verificationCode.toString().split('').join(' ');
             await client.calls.create({
-            twiml: `<Response><Say>Your verification code is ${verificationWithSpace}</Say></Response>`,
+            twiml: `<Response><Say voice="alice">Your verification code is ${verificationWithSpace}</Say></Response>`,
             from: process.env.TWILIO_PHONE_NUMBER,
             to: phone
         });
@@ -90,6 +91,7 @@ async function sendVerificationCode(verificationMethod,verificationCode,name,ema
         })
         }
     }catch(error){
+        console.log("TWILIO ERROR:", error); 
         return res.status(500).json({
             success:false,
             message: 'Verification code is failed to send.'

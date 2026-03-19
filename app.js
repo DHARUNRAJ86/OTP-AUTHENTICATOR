@@ -5,6 +5,8 @@ import cors from 'cors'
 import {connection} from './database/dbConnection.js'
 import {errorMiddleware} from './middleware/error.js'
 import userRouter from './routes/userRouter.js'
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const app = express()
 config({path:'./config.env'});
