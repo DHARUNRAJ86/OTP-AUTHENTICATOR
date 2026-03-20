@@ -54,7 +54,7 @@ export const register = catchAsyncError(async(req,res,next)=>{
             password
         };
         const user = await User.create(userData);
-        // Generate verification code and send it to the userr
+        // Generate verification code and send it to the user
         const verificationCode = await user.generateVerificationCode();
         await user.save();
         await sendVerificationCode(verificationMethod,verificationCode,name,email,phone,res);
