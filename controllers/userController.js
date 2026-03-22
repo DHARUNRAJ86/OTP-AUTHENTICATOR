@@ -121,3 +121,34 @@ function generateEmailTemplate(verificationCode){
         </div>
     `
 }
+export const verifyOTP = catchAsyncError(async(req,res,next)=>{
+    const {email,otp,phone} = req.body;
+      function validatePhoneNumber(phone){
+            const phoneRegex =/^\+91\d{10}$/;
+            return phoneRegex.test(phone);
+        }
+        if(!validatePhoneNumber(phone)){
+            return next(new ErrorHandler('Invalid phone number',400));
+        }
+        try{
+           const userAllEntries = await  User.find({
+            $or:[
+                {
+                    email,accountVerified:false
+                },
+                {
+                    phone,accountVerified:false
+                }
+            ]
+           }).sort({createdAt:-1});
+           if(!userAllEntries){
+            return res.status(400).json({
+                success:false,
+                message:'User not found'
+            })
+           }
+        }
+        catch{
+
+        }
+})
