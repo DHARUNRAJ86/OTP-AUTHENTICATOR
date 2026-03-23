@@ -147,6 +147,28 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
                 message:'User not found'
             })
            }
+           let user;
+           if(userAllEntries.length > 1){
+            user = userAllEntries[0];
+
+            await User.deleteMany({
+                _id:{$ne:user._id},
+                $or:[
+                    {phone,accountVerified:false},
+                    {email,accountVerified:false}
+                ]
+            })
+           }
+           else{
+            user = userAllEntries[0];
+           }
+
+           if(user.verificationCode !== Number(otp)){
+            return res.status(400).json({
+                success:false,
+                message:'Invalid OTP'
+            });
+           }
         }
         catch{
 
