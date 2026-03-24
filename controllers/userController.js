@@ -3,6 +3,8 @@ import { catchAsyncError } from '../middleware/catchAsyncError.js'
 import {User} from '../models/userModel.js'
 import { sendEmail } from '../utilis/sendEmail.js';
 import twilio from 'twilio';
+import { SecondaryAuthTokenContextImpl } from 'twilio/lib/rest/accounts/v1/secondaryAuthToken.js';
+import { sendToken} from '../utilis/sendToken.js';
 
 
 
@@ -142,10 +144,7 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
             ]
            }).sort({createdAt:-1});
            if(!userAllEntries){
-            return res.status(400).json({
-                success:false,
-                message:'User not found'
-            })
+            return next(new ErrorHandler('User not found',404));
            }
            let user;
            if(userAllEntries.length > 1){
@@ -164,13 +163,25 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
            }
 
            if(user.verificationCode !== Number(otp)){
-            return res.status(400).json({
-                success:false,
-                message:'Invalid OTP'
-            });
+             return next(new ErrorHandler('Invalid OTP',400));
            }
-        }
-        catch{
 
+           const currentTime = Date.now();
+           const verificationCodeExpire = new Date(user.verificationCodeExpire).getTime();
+           console.log("Current Time:",currentTime);
+           console.log("Verification Code Expire Time:",verificationCodeExpire);
+           if(currentTime > verificationCodeExpire){
+            return next(new ErrorHandler('OTP Expired.',400));
+           }
+
+           user.accountVerified = true;
+           user.verificationCode = null;
+           user.verificationCodeExpire = null;
+           await user.save({validateModifiedOnly:true});
+
+           sendToken(user,200,'Account Verified Successfully',res);
+        }
+        catch(error){
+            return next(new ErrorHandler('Internal Server Error',500));
         }
 })
