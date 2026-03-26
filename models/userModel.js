@@ -51,7 +51,7 @@ userSchema.methods.generateVerificationCode = function(){
 }
 
 userSchema.methods.generateToken = async function(){
-   return jwt.sign({_id:this._id},process.env.JWT_SECRET_KEY,{
+   return await jwt.sign({_id:this._id},process.env.JWT_SECRET_KEY,{
        expiresIn: process.env.JWT_EXPIRE
    })
 }

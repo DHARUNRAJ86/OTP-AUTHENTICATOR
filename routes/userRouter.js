@@ -1,8 +1,9 @@
 import express from 'express'
-import {register} from '../controllers/userController.js'
+import {register,verifyOTP} from '../controllers/userController.js'
 
 const router =express.Router();
 
 router.post('/register',register);
+router.post('/otp-verification',verifyOTP)
 
 export default router;
