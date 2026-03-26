@@ -167,7 +167,7 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
            }
 
            const currentTime = Date.now();
-           const verificationCodeExpire = new Date(user.verificationCodeExpire).getTime();
+          const verificationCodeExpire = new Date(user.verificationCodeExpiry).getTime();
            console.log("Current Time:",currentTime);
            console.log("Verification Code Expire Time:",verificationCodeExpire);
            if(currentTime > verificationCodeExpire){
@@ -176,10 +176,10 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
 
            user.accountVerified = true;
            user.verificationCode = null;
-           user.verificationCodeExpire = null;
-           await user.save({validateModifiedOnly:true});
+           user.verificationCodeExpiry = null;
+           await user.save({validateBeforeSave:false});
 
-           sendToken(user,200,'Account Verified Successfully',res);
+           return sendToken(user,200,'Account Verified Successfully',res);
         }
         catch(error){
             return next(new ErrorHandler('Internal Server Error',500));

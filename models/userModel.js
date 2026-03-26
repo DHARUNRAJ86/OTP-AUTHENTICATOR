@@ -50,10 +50,12 @@ userSchema.methods.generateVerificationCode = function(){
     return verificationCode;
 }
 
-userSchema.methods.generateToken = async function(){
-   return await jwt.sign({_id:this._id},process.env.JWT_SECRET_KEY,{
-       expiresIn: process.env.JWT_EXPIRE
-   })
+userSchema.methods.generateToken = function() {
+   return jwt.sign(
+       { _id: this._id },
+       process.env.JWT_SECRET,               // ✅ must exist
+       { expiresIn: process.env.JWT_EXPIRE || "7d" } // fallback
+   );
 }
 
 export const User = mongoose.model('User',userSchema);
