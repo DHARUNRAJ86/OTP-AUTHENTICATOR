@@ -184,4 +184,12 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
         catch(error){
             return next(new ErrorHandler('Internal Server Error',500));
         }
+});
+
+export const login = catchAsyncError(async(req,res,next)=>{
+    const {email,password} = req.body;
+    if(!email || !password){
+        return next(new ErrorHandler('Email and Password are required',400));
+    }
+    const user = await User.findOne({email,accountVerified:true});
 })
