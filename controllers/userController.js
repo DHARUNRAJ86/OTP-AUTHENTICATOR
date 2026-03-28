@@ -191,5 +191,13 @@ export const login = catchAsyncError(async(req,res,next)=>{
     if(!email || !password){
         return next(new ErrorHandler('Email and Password are required',400));
     }
-    const user = await User.findOne({email,accountVerified:true});
+    const user = await User.findOne({email,accountVerified:true}).select("+password");
+    if(!user){
+        return next(new ErrorHandler("Invalid Email or Password."),400);
+    }
+    const isPasswordMatched = await user.comparePassword(password);
+    if(!isPasswordMatched){
+        return next(new ErrorHandler("Invalid Email or Password."),400);
+    }
+    sendToken(user,200,"User logged in successfully.",res);
 })
