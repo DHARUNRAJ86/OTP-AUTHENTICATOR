@@ -193,11 +193,21 @@ export const login = catchAsyncError(async(req,res,next)=>{
     }
     const user = await User.findOne({email,accountVerified:true}).select("+password");
     if(!user){
-        return next(new ErrorHandler("Invalid Email or Password."),400);
+        return next(new ErrorHandler("Invalid Email or Password.",400));
     }
     const isPasswordMatched = await user.comparePassword(password);
     if(!isPasswordMatched){
-        return next(new ErrorHandler("Invalid Email or Password."),400);
+        return next(new ErrorHandler("Invalid Email or Password.",400));
     }
     sendToken(user,200,"User logged in successfully.",res);
+})
+
+export const logout = catchAsyncError(async(req,res,next)=>{
+        res.status(200).cookie("token","",{
+            expires: new Date(Date.now()),
+            httpOnly: true
+        }).json({
+            success: true,
+            message :"Logged out successfully."
+        });
 })
