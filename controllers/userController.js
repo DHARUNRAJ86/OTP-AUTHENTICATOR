@@ -219,3 +219,14 @@ export const getUser = catchAsyncError(async(req,res,next)=>{
             user,
         })
 })
+
+export const forgotPassword =  catchAsyncError(async(req,res,next)=>{
+    const user = await User.findOne({
+        email:req.body.email,
+        accountVerified:true
+    });
+    if(!user){
+        return next(new ErrorHandler('User not found',404));
+    }
+    const resetToken = user.generateResetPasswordToken();
+})

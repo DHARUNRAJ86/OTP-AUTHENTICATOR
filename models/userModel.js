@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 
 const userSchema = new mongoose.Schema({
     name:String,
@@ -57,6 +58,10 @@ userSchema.methods.generateToken = function() {
        process.env.JWT_SECRET,               // ✅ must exist
        { expiresIn: process.env.JWT_EXPIRE || "7d" } // fallback
    );
+};
+
+userSchema.methods.generateResetPasswordToken = function(){
+       const resetToken = crypto.randomBytes(20).toString('hex')
 }
 
 export const User = mongoose.model('User',userSchema);
