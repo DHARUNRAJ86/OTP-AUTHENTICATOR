@@ -229,4 +229,25 @@ export const forgotPassword =  catchAsyncError(async(req,res,next)=>{
         return next(new ErrorHandler('User not found',404));
     }
     const resetToken = user.generateResetPasswordToken();
+    await user.save({validateBeforeSave:false});
+
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
+    const message = `Your Reset Password Token is:- \n\n ${resetPasswordUrl} \n\n If you have not requested this email then, please ignore it.`;
+
+    try{
+        sendEmail({
+            email:user.email,
+            subject:"MERN AUTHENTICATION APP RESET PASSWORD",
+            message,
+        });
+        res.status(200).json({
+            success:true,
+            message:`Email send to ${user.email} successfully.`
+        })
+    }catch(error){
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpiry = undefined;
+        await user.save({validateBeforeSave:false});
+        return next(new ErrorHandler(error.message ? error.message : 'Cannot send reset password token',500));
+    }
 })
