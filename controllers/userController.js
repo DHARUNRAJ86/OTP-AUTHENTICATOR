@@ -5,7 +5,7 @@ import { sendEmail } from '../utilis/sendEmail.js';
 import twilio from 'twilio';
 import { SecondaryAuthTokenContextImpl } from 'twilio/lib/rest/accounts/v1/secondaryAuthToken.js';
 import { sendToken} from '../utilis/sendToken.js';
-
+import crypto from 'crypto';
 
 
 
@@ -250,4 +250,26 @@ export const forgotPassword =  catchAsyncError(async(req,res,next)=>{
         await user.save({validateBeforeSave:false});
         return next(new ErrorHandler(error.message ? error.message : 'Cannot send reset password token',500));
     }
+});
+
+export const resetPassword = catchAsyncError(async(req,res,next)=>{
+    const {token} = req.params;
+    const resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpiry:{$gt:Date.now()}
+    })
+    if(!user){
+        return next(new ErrorHandler('Reset Password Token is invalid or has been expired',400));
+    }
+    if(req.body.password !== req.body.confirmPassword){
+        return next(new ErrorHandler('Password & confirm Password does not match',400));
+    }
+    user.password =  req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    
+    await user.save();
+    sendToken(user,200,'Reset Password Successfully.',res);
+
 })
