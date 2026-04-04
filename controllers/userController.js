@@ -45,7 +45,7 @@ export const register = catchAsyncError(async(req,res,next)=>{
                 { email,accountVerified:false},
             ]
         });
-        if(registrationAttemptsByUser.length >=3){
+        if(registrationAttemptsByUser.length > 3){
             return next(new ErrorHandler('You have exceeded the maximum number of attempts (3). Please try again later.',400));
         }
 
@@ -272,4 +272,4 @@ export const resetPassword = catchAsyncError(async(req,res,next)=>{
     await user.save();
     sendToken(user,200,'Reset Password Successfully.',res);
 
-})
+});
