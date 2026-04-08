@@ -12,7 +12,21 @@ import { Context } from "./main";
 import OtpVerification from "./pages/OtpVerification";
 
 const App = () => {
-  return <></>;
+  return <>
+
+  <Router>
+    <Routes>
+       <Route path="/" element={<Home />} /> 
+       <Route path="/auth" element={<Auth/>}/> 
+       <Route path="/otp-verification/:email/:phone" element={<OtpVerification/>}/> 
+       <Route path="/password/forgot" element={<ForgotPassword/>}/> 
+       <Route path="/password/reset/:token" element={<ResetPassword/>}/> 
+    </Routes>
+
+    <ToastContainer theme="colored"/>
+  </Router>
+
+  </>;
 };
 
 export default App;
