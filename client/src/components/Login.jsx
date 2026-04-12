@@ -6,25 +6,31 @@ import { Context } from "../main";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const {isAuthenticated,setIsAuthenticated,user,setUser} = useContext(Context);
+  const {setIsAuthenticated,setUser} = useContext(Context);
   const navigateTo = useNavigate();
 
   const {register,handleSubmit,formState:{errors}} = useForm();
-  const handleLogin = async (date) =>{
-    await axios.post("http://localhost:4000/api/v1/user/login",data,{
-      withCredentials:true,
-      headers:{
-         "Content-Type":"application/json",
+  const handleLogin = async (data) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:4000/api/v1/user/login",
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-  }).then((res)=>{
+    );
+
     toast.success(res.data.message);
     setIsAuthenticated(true);
     setUser(res.data.user);
     navigateTo("/");
-  }).catch((err)=>{
-    toast.error(err.response.data.message);
-  })
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Invalid email or password");
   }
+};
   return <>
      <form className='auth-form' onSubmit={handleSubmit((data)=>handleLogin(data))}>
       <h2>Login</h2>
