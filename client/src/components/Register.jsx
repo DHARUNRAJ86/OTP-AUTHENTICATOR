@@ -11,39 +11,52 @@ const Register = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const handleRegister = async (data) => {
-    try {
-      const formattedData = {
-        ...data,
-        phone: `+91${data.phone}`,
-      };
+  try {
+    const cleanedPhone = data.phone.replace(/\D/g, "").slice(0, 10);
 
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/user/register",
-        formattedData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const formattedData = {
+      ...data,
+      phone: `+91${cleanedPhone}`,
+    };
 
-      toast.success(res.data.message);
+    console.log("FINAL DATA:", formattedData); // ✅ DEBUG
 
-      navigateTo(`/otp-verification/${data.email}/${formattedData.phone}`);
+    const res = await axios.post(
+      "http://localhost:4000/api/v1/user/register",
+      formattedData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Registration Failed");
-    }
-  };
+    toast.success(res.data.message);
+  } catch (error) {
+    console.log("ERROR:", error.response?.data); // ✅ DEBUG
+    toast.error(error.response?.data?.message || "Registration Failed");
+  }
+};
   return <>
     <div>
       <form className='auth-form' onSubmit={handleSubmit((data) => handleRegister(data))}>
         <h2>Register</h2>
         <input type="text" placeholder="Name" required {...register("name")} />
+        <input type="email" placeholder="Email" required {...register("email")} />
         <div>
-          <span>+91</span>
-          <input type="number" placeholder="Phone Number" required {...register("phone")} />
+          
+          <input
+  type="text"
+  placeholder="Enter 10-digit phone number"
+  {...register("phone", {
+    required: "Phone required",
+    pattern: {
+      value: /^[0-9]{10}$/,
+      message: "Enter valid 10-digit number",
+    },
+  })}
+/>
         </div>
         <div>
            <input type="password" placeholder="Password" required {...register("password")} />
@@ -53,12 +66,15 @@ const Register = () => {
             <div className='wrapper'>
                   <label>
                      <input type="radio" name='verificationMethod' value={"email"} {...register("verificationMethod")} required/>
+                     Email
                   </label>
                   <label>
                      <input type="radio" name='verificationMethod' value={"phone"} {...register("verificationMethod")} required/>
+                     Phone
                   </label>
             </div>
         </div>
+        <button type='submit'>Register</button>
       </form>
     </div>
   </>;

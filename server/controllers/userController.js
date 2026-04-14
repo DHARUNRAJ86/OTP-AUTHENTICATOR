@@ -81,11 +81,11 @@ async function sendVerificationCode(verificationMethod,verificationCode,name,ema
         })
         }else if(verificationMethod === 'phone'){
             const verificationWithSpace = verificationCode.toString().split('').join(' ');
-            await client.calls.create({
-            twiml: `<Response><Say voice="alice">Your verification code is ${verificationWithSpace}</Say></Response>`,
-            from: process.env.TWILIO_PHONE_NUMBER,
-            to: phone
-        });
+           await client.messages.create({
+  body: `Your OTP is ${verificationCode}`,
+  from: process.env.TWILIO_PHONE_NUMBER,
+  to: phone
+});
           res.status(200).json({
             success:true,
             message: `OTP sent`
