@@ -33,6 +33,7 @@ const Register = () => {
     );
 
     toast.success(res.data.message);
+     navigateTo(`/otp-verification/${formattedData.email}/${formattedData.phone}`);
   } catch (error) {
     console.log("ERROR:", error.response?.data); // ✅ DEBUG
     toast.error(error.response?.data?.message || "Registration Failed");

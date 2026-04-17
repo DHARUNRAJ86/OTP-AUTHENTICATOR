@@ -3,6 +3,9 @@ import "../styles/OtpVerification.css";
 import axios from "axios";
 import { Navigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Context } from "../main";   // ✅ ADD THIS LINE
+
+
 
 const OtpVerification = () => {
   const {isAuthenticated,setIsAuthenticated,setUser} = useContext(Context);
@@ -46,8 +49,28 @@ const OtpVerification = () => {
       setUser(null);
      })
   }
-  
-  return <></>;
+  if(isAuthenticated){
+    return <Navigate to ={"/"}/>
+  }
+  return <>
+
+    <div className='otp-verification-page'>
+       <div className='otp-container'>
+        <h1>OTP Verification</h1>
+        <p>Enter the 5-digit OTP sent to your registered email or phone.</p>
+        <form onSubmit={handleOtpVerification} className='otp-form'>
+          <div className='otp-input-container'>
+            {otp.map((digit,index)=>{
+              return (
+                <input   type="text" maxLength="1" key={index} value={digit} onChange={(e)=>handleChange(e.target.value,index)} onKeyDown={(e)=>handleKeyDown(e,index)} className='otp-input' />
+              )
+            })}
+          </div>
+          <button type="submit" className='verify-button'>Verify OTP</button>
+        </form>
+       </div>
+    </div>
+  </>;
 };
 
 export default OtpVerification;
