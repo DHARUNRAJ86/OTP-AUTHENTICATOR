@@ -62,7 +62,9 @@ const OtpVerification = () => {
           <div className='otp-input-container'>
             {otp.map((digit,index)=>{
               return (
-                <input   type="text" maxLength="1" key={index} value={digit} onChange={(e)=>handleChange(e.target.value,index)} onKeyDown={(e)=>handleKeyDown(e,index)} className='otp-input' />
+                <input  
+                id={`otp-input-${index}`}
+                 type="text" maxLength="1" key={index} value={digit} onChange={(e)=>handleChange(e.target.value,index)} onKeyDown={(e)=>handleKeyDown(e,index)} className='otp-input' />
               )
             })}
           </div>
