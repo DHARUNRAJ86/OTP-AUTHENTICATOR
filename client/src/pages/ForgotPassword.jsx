@@ -28,7 +28,19 @@ const ForgotPassword = () => {
       toast.error(err.response?.data?.message || "Invalid email or password");
     }
   };
-  return <></>;
+  return <>
+  
+  <div className='forgot-password-page'>
+     <div className='forgot-password-container'>
+       <h2>Forgot Password</h2>
+       <p>Enter your email address to reset your password.</p>
+       <form onSubmit={handleForgotPassword} className='forgot-password-form'>
+         <input type="email" placeholder="Enter your email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+       </form>
+     </div>
+  </div>
+
+  </>;
 };
 
 export default ForgotPassword;
