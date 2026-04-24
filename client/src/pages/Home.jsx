@@ -10,7 +10,11 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Footer from "../layout/Footer";
 
 const Home = () => {
-  return <></>;
+  return <>
+     <section className="home">
+          <Hero/>
+     </section>
+  </>;
 };
 
 export default Home;
