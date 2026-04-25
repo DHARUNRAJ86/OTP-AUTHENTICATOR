@@ -10,9 +10,18 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Footer from "../layout/Footer";
 
 const Home = () => {
+   
+  const {isAuthenticated,setIsAuthenticated,setUser} = useContext(Context);
+  const navigate = useNavigate();
+  
+
   return <>
      <section className="home">
           <Hero/>
+          <Instructor/>
+          <Technologies/>
+          <Footer/>
+          <button onClick={logout}>Logout</button>
      </section>
   </>;
 };
