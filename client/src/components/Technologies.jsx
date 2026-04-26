@@ -29,7 +29,16 @@ const techData = [
 ];
 
 const Technologies = () => {
-  return <></>;
+  return <>
+    <div className='technologies-section'>
+      <h1>Technologies We'll Use</h1>
+      <div className='tech-cards-container'>
+        {techData.map((tech,index)=>{
+          
+        })}
+      </div>
+    </div>
+  </>;
 };
 
 export default Technologies;
