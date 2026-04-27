@@ -38,10 +38,13 @@
 }
 
 .tech-image img {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 20px;
-  object-fit: contain;
+  width: 180px;          /* increase size */
+  height: 180px;
+  border-radius: 50%;    /* make it circle */
+  border: 6px solid #10b981; /* green border */
+  object-fit: cover;     /* prevent stretching */
+  display: block;
+  margin: 20px auto;  
 }
 
 .tech-name {
