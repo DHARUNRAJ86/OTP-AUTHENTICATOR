@@ -27,24 +27,10 @@ Scalable backend architecture
 ⚡ Full-stack implementation
 
 🧰 Tech Stack
-💻 Frontend	⚙️ Backend	🗄️ Database
-React.js	Node.js	MongoDB
-HTML/CSS	Express	Mongoose
-JavaScript	REST API	
-📁 Folder Structure
-OTP-AUTHENTICATOR
-├── frontend
-│   ├── src
-│   ├── components
-│   └── pages
-│
-├── backend
-│   ├── controllers
-│   ├── routes
-│   ├── models
-│   └── utils
-│
-└── README.md
+💻 Frontend	  React.js	HTML/CSS JavaScript
+⚙️ Backend		Node.js	MongoDB Express REST API
+🗄️ Database	  Mongoose	
+
 ⚙️ Installation
 # Clone repo
 git clone https://github.com/DHARUNRAJ86/OTP-AUTHENTICATOR.git
