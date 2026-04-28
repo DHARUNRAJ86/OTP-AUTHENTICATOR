@@ -34,6 +34,7 @@ const Technologies = () => {
       <h1>Technologies We'll Use</h1>
       <div className='tech-cards-container'>
         {techData.map((tech,index)=>{
+           return (
           <div key={index} className="tech-card">
             <div className='tech-image'>
               <img src={tech.image} alt={tech.name} />
@@ -41,6 +42,7 @@ const Technologies = () => {
             <h3 className='tech-name'>{tech.name}</h3>
             <p className='tech-description'>{tech.description}</p>
           </div>
+           )  
         })}
       </div>
     </div>
