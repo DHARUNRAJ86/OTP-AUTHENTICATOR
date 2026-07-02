@@ -25,6 +25,6 @@ app.use(express.urlencoded({extended:true}));
 app.use('/api/v1/user',userRouter);
 
 
-http://localhost:4000/api/v1/user/register
+// http://localhost:4000/api/v1/user/register
 
 app.use(errorMiddleware);
