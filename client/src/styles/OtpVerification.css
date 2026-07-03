@@ -10,20 +10,24 @@
 
 .otp-container {
   text-align: center;
-  padding: 30px 20px;
+  padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+  background: rgba(255, 255, 255, 0.9);   /* 🔥 same as reset page */
+  backdrop-filter: blur(10px);            /* 🔥 glass effect */
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+
   max-width: 400px;
   width: 100%;
 }
-
 .otp-container h1 {
   font-size: 44px;
   margin-bottom: 20px;
 }
 
 .otp-container p {
-  color: gray;
+  color: black;
   line-height: 1.3;
   font-size: 16px;
   margin-bottom: 20px;
@@ -41,7 +45,7 @@
   height: 50px;
   font-size: 1.5rem;
   text-align: center;
-  border: 2px solid #ddd;
+  border: 2px solid black;
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
